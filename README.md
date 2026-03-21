@@ -380,7 +380,4 @@ npx tsx src/scripts/generateEmbeddings.ts
 - [Nomic AI](https://nomic.ai) — open-source embedding model
 - [Coursera Dataset — Kaggle](https://www.kaggle.com/) — course catalog data
 - [ARTPARK CodeForge Hackathon](https://artpark.in) — challenge organizers
-=======
-# PathForge
-AI-powered onboarding engine that parses your resume and job description to generate a personalized learning pathway — skipping what you know, focusing on what you need.
->>>>>>> 3c30bc4185fb36dc6a90f2fc8f720c0f1e03ef03
+
