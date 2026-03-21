@@ -48,21 +48,38 @@ export default function ResultTabs({ result, activeTab, onTabChange }: Props) {
             <Section title="Skill Gap Analysis">
               <SkillGapChart skillGap={result.skill_gap} />
             </Section>
-            {result.uncoveredSkills?.length > 0 && (
-              <div style={{
-                background: "rgba(255,107,107,0.05)",
-                border: "1px solid rgba(255,107,107,0.2)",
-                borderRadius: 10,
-                padding: "12px 16px",
-                marginBottom: 24,
-                fontSize: 13,
-                color: "#FF6B6B",
-              }}>
-                ⚠️ No courses found in catalog for:{" "}
-                <strong>{result.uncoveredSkills.join(", ")}</strong>.
-                Consider expanding your course catalog.
+           {result.uncoveredSkills?.length > 0 && (
+            <div style={{
+              background: "rgba(255,165,0,0.05)",
+              border: "1px solid rgba(255,165,0,0.2)",
+              borderRadius: radius.lg,
+              padding: "16px 20px",
+              marginBottom: 24,
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 12,
+            }}>
+              <span style={{ fontSize: 20, flexShrink: 0 }}>🔍</span>
+              <div>
+                <p style={{
+                  fontFamily: fonts.display,
+                  fontWeight: 700,
+                  fontSize: 14,
+                  color: "#FFB347",
+                  marginBottom: 6,
+                }}>
+                  Catalog Gap Detected
+                </p>
+                <p style={{ fontSize: 13, color: colors.textSub, lineHeight: 1.6, margin: 0 }}>
+                  We couldn't find direct course matches for{" "}
+                  <span style={{ color: "#FFB347", fontWeight: 600 }}>
+                    {result.uncoveredSkills.join(", ")}
+                  </span>
+                  {" "}in the current catalog. Consider adding specialized courses for these skills or expanding your catalog.
+                </p>
               </div>
-            )}
+            </div>
+          )}
 
             <Section title="Learning Pathway">
               <PathwayTimeline pathway={result.pathway} />

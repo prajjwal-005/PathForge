@@ -1,7 +1,8 @@
-import { groq } from "./groq";
+import { getGroq } from "./groq";
+
 
 export async function extractSkills(resumeText: string, jdText: string) {
-  const response = await groq.chat.completions.create({
+  const response = await getGroq().chat.completions.create({
     model: "llama-3.3-70b-versatile",
     messages: [
       {

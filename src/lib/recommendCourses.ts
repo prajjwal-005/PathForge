@@ -1,4 +1,4 @@
-import { groq } from "./groq";
+import { getGroq } from "./groq";
 import { searchCatalog,loadEmbeddings  } from "./searchCatalog";
 
 export async function recommendCourses(
@@ -8,7 +8,7 @@ export async function recommendCourses(
 
   const relevantCourses = await searchCatalog(missingSkills, 15);
 
-  const response = await groq.chat.completions.create({
+  const response = await getGroq().chat.completions.create({
     model: "llama-3.3-70b-versatile",
     messages: [
       {

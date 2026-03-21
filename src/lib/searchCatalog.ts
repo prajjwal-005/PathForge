@@ -1,3 +1,5 @@
+import { pipeline } from "@xenova/transformers";
+
 interface CourseWithEmbedding {
   course: string;
   skills: string;
@@ -12,11 +14,11 @@ interface CourseWithEmbedding {
 
 let cachedEmbeddings: CourseWithEmbedding[] | null = null;
 
-export function loadEmbeddings(): CourseWithEmbedding[]{
+export function loadEmbeddings(): CourseWithEmbedding[] {
   if (cachedEmbeddings) return cachedEmbeddings;
   const fs = require("fs");
   const path = require("path");
-  const filePath = path.join(process.cwd(),"src", "data", "catalog_embeddings.json");
+  const filePath = path.join(process.cwd(), "src", "data", "catalog_embeddings.json");
   const raw = fs.readFileSync(filePath, "utf-8");
   cachedEmbeddings = JSON.parse(raw);
   return cachedEmbeddings!;
@@ -28,8 +30,6 @@ function cosineSimilarity(a: number[], b: number[]): number {
   const magB = Math.sqrt(b.reduce((sum, val) => sum + val * val, 0));
   return dot / (magA * magB);
 }
-
-import { pipeline } from "@xenova/transformers";
 
 let embedder: any = null;
 
@@ -47,8 +47,6 @@ async function getEmbedding(text: string): Promise<number[]> {
 export async function searchCatalog(missingSkills: string[], topN = 15) {
   const query = `Skills needed: ${missingSkills.join(", ")}`;
   const queryEmbedding = await getEmbedding(query);
-    console.log("Embedding response:", JSON.stringify(queryEmbedding).slice(0, 100)); // add this
-
   const catalog = loadEmbeddings();
 
   const scored = catalog.map((course) => ({
