@@ -21,6 +21,7 @@ const TABS: { id: Tab; label: string }[] = [
 ];
 
 export default function ResultTabs({ result, activeTab, onTabChange }: Props) {
+  
   return (
     <div>
        {/* Impact Metrics */}
@@ -45,6 +46,22 @@ export default function ResultTabs({ result, activeTab, onTabChange }: Props) {
             <Section title="Skill Gap Analysis">
               <SkillGapChart skillGap={result.skill_gap} />
             </Section>
+            {result.uncoveredSkills?.length > 0 && (
+              <div style={{
+                background: "rgba(255,107,107,0.05)",
+                border: "1px solid rgba(255,107,107,0.2)",
+                borderRadius: 10,
+                padding: "12px 16px",
+                marginBottom: 24,
+                fontSize: 13,
+                color: "#FF6B6B",
+              }}>
+                ⚠️ No courses found in catalog for:{" "}
+                <strong>{result.uncoveredSkills.join(", ")}</strong>.
+                Consider expanding your course catalog.
+              </div>
+            )}
+
             <Section title="Learning Pathway">
               <PathwayTimeline pathway={result.pathway} />
             </Section>

@@ -50,6 +50,9 @@ Rules:
 - Order so prerequisites are completed before dependent courses
 - Cover all missing skills if possible
 - Return ONLY the JSON object
+- Order courses from beginner → intermediate → advanced level
+- Never place an intermediate/advanced course before a beginner course
+- Prerequisites must always be completed before dependent courses
         `,
       },
     ],
@@ -65,10 +68,10 @@ Rules:
     parsed = JSON.parse(cleaned);
   }
 
-const catalogNames = new Set(
-    loadEmbeddings().map((c) => c.course.toLowerCase().trim())
-  );
-
+  const catalogNames = new Set(
+      loadEmbeddings().map((c) => c.course.toLowerCase().trim())
+    );
+  
   const validatedPathway = parsed.pathway.filter((course: any) => {
     const exists = catalogNames.has(course.course.toLowerCase().trim());
     if (!exists) {
@@ -76,6 +79,17 @@ const catalogNames = new Set(
     }
     return exists;
   });
+   // Check which missing skills have no course coverage
+  const coveredSkills = new Set(
+    validatedPathway.flatMap((c: any) =>
+      c.skills_covered.map((s: string) => s.toLowerCase())
+    )
+  );
+
+  const uncoveredSkills = missingSkills.filter(
+    (skill) => !coveredSkills.has(skill.toLowerCase())
+  );
+
 
   return {
     pathway: validatedPathway,
@@ -85,5 +99,6 @@ const catalogNames = new Set(
       total_grounded: validatedPathway.length,
       hallucinations_removed: parsed.pathway.length - validatedPathway.length,
     },
+    uncoveredSkills,
   };
 }
