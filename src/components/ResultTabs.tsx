@@ -13,15 +13,17 @@ interface Props {
   activeTab: Tab;
   onTabChange: (tab: Tab) => void;
 }
-
-const TABS: { id: Tab; label: string }[] = [
-  { id: "gap", label: "📊 Skill Gap" },
-  { id: "roadmap", label: "🗺️ Roadmap" },
-  { id: "trace", label: "🔍 Reasoning Trace" },
-];
+function getTabs(result: AnalysisResult) {
+  return [
+    { id: "gap" as Tab, label: `📊 Skill Gap (${result.skill_gap.missing_skills.length} missing)` },
+    { id: "roadmap" as Tab, label: `🗺️ Roadmap (${result.pathway.length} courses)` },
+    { id: "trace" as Tab, label: `🔍 Reasoning Trace` },
+  ];
+}
 
 export default function ResultTabs({ result, activeTab, onTabChange }: Props) {
-  
+  const TABS = getTabs(result);
+
   return (
     <div>
        {/* Impact Metrics */}

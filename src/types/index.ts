@@ -45,7 +45,7 @@ export interface AnalysisResult {
   trace: TraceStep[];
   grounding: GroundingStats;
   impact: ImpactMetrics; 
-  uncoveredSkills: string[]; 
+  uncoveredSkills: string[];
 }
 
 export type Tab = "gap" | "roadmap" | "trace";

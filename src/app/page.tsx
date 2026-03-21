@@ -1,4 +1,6 @@
 "use client";
+import dynamic from "next/dynamic";
+
 
 import { useState, useEffect } from "react";
 import { Tab } from "@/types";
@@ -6,11 +8,11 @@ import { useAnalyze } from "@/hooks/useAnalyze";
 import UploadForm from "@/components/UploadForm";
 import ResultTabs from "@/components/ResultTabs";
 import { colors, fonts, radius, spacing, gradients } from "@/styles/tokens";
-import DownloadReport from "@/components/DownloadReport";
+import DownloadReport, { CopyButton } from "@/components/DownloadReport";
 
 
 export default function Home() {
-  const { loading, error, result, analyze, reset } = useAnalyze();
+  const { loading, loadingStep, error, result, analyze, reset } = useAnalyze();
   const [activeTab, setActiveTab] = useState<Tab>("gap");
 
   // Inject fonts
@@ -35,7 +37,12 @@ export default function Home() {
 
       {/* Upload or Results */}
       {!result ? (
-        <UploadForm onAnalyze={analyze} loading={loading} error={error} />
+        <UploadForm
+          onAnalyze={analyze}
+          loading={loading}
+          loadingStep={loadingStep}  
+          error={error}
+        />
       ) : (
         <main style={s.results}>
           {/* Summary Pills */}
@@ -46,13 +53,40 @@ export default function Home() {
             <Pill label="Grounding Score" value={`${result.grounding.total_grounded}/${result.grounding.total_recommended}`} accent
           />
           </div>
-
+          {result.skill_gap.missing_skills.length === 0 ? (
+            <div style={{
+              textAlign: "center",
+              padding: "60px 24px",
+              background: colors.surface,
+              border: `1px solid ${colors.border}`,
+              borderRadius: radius.xxl,
+              marginBottom: 32,
+            }}>
+              <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
+              <h2 style={{
+                fontFamily: fonts.display,
+                fontSize: 24, fontWeight: 700,
+                color: colors.accent, marginBottom: 8,
+              }}>
+                Perfect Match!
+              </h2>
+              <p style={{ color: colors.textMuted, fontSize: 16 }}>
+                Your resume already covers all the required skills for this role.
+                No additional training needed.
+              </p>
+            </div>
+          ) : (
+            <ResultTabs result={result} activeTab={activeTab} onTabChange={setActiveTab} />
+          )}
           <ResultTabs result={result} activeTab={activeTab} onTabChange={setActiveTab} />
 
           
           
+         <div style={{ display: "flex", gap: 12, marginTop: 32 }}>
           <button style={s.backBtn} onClick={reset}>← New Analysis</button>
+          <CopyButton result={result} />
           <DownloadReport result={result} />
+        </div>
 
 
         </main>

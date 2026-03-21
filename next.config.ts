@@ -6,7 +6,5 @@ const nextConfig: NextConfig = {
     HF_API_KEY: process.env.HF_API_KEY,
   },
   turbopack: {},
-  serverExternalPackages: ["jspdf", "html2canvas"],
+  serverExternalPackages: ["unpdf"],
 };
-
-export default nextConfig;
