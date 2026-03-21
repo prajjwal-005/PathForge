@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
         step: "Skill Extraction",
         input: `Resume: ${finalResumeText.slice(0, 150)}...`,        
         output: skillGap.resume_skills,
-        reasoning: `Identified ${skillGap.resume_skills.length} skills in resume`,
+        reasoning: `Extracted ${skillGap.resume_skills.length} skills from resume and ${skillGap.jd_skills.length} skills from job description. Identified ${skillGap.missing_skills.length} missing skills.`,
       },
       {
         step: "Gap Analysis",
@@ -103,7 +103,8 @@ export async function POST(req: NextRequest) {
     pathway: recommendation.pathway,
     trace: fullTrace,
     grounding: recommendation.groundingStats, 
-    impact
+    impact,
+    uncoveredSkills: recommendation.uncoveredSkills,
   });
 
   } catch (err) {
