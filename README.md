@@ -346,7 +346,7 @@ npx tsx src/scripts/generateEmbeddings.ts
 
 ---
 
-##  Features
+## Features
 
 - **Resume parsing** — PDF upload or paste text
 - **JD parsing** — PDF upload or paste text
@@ -360,7 +360,7 @@ npx tsx src/scripts/generateEmbeddings.ts
 
 ---
 
-##  Evaluation Criteria Coverage
+## Evaluation Criteria Coverage
 
 | Criteria | Weight | How We Address It |
 |---|---|---|
@@ -374,7 +374,7 @@ npx tsx src/scripts/generateEmbeddings.ts
 
 ---
 
-##  Acknowledgements
+## Acknowledgements
 
 - [Groq](https://groq.com) — ultra-fast LLM inference
 - [Nomic AI](https://nomic.ai) — open-source embedding model
