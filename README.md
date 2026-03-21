@@ -296,6 +296,8 @@ PathForge/
 ├── .env.local                        # Local secrets (not committed)
 ├── next.config.ts                    # Next.js configuration
 ├── package.json
+├── Dockerfile              
+├── .dockerignore           
 └── README.md
 ```
 
@@ -329,6 +331,21 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000)
 
 > **Note:** `catalog_embeddings.json` is pre-committed to the repository. No embedding generation step is required to run the app.
+
+### 🐳 Docker
+
+**Prerequisites:** [Docker Desktop](https://www.docker.com/products/docker-desktop) installed and running.
+```bash
+# 1. Build the image
+docker build -t pathforge .
+
+# 2. Run the container
+docker run -p 3000:3000 -e GROQ_API_KEY=your_groq_key pathforge
+```
+
+Open [http://localhost:3000](http://localhost:3000)
+
+> **Note:** `catalog_embeddings.json` is pre-committed to the repository — no embedding generation step needed inside Docker.
 
 ### 🗂️ Using Your Own Course Catalog
 
