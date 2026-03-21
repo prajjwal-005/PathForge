@@ -7,7 +7,7 @@
   "build": "next build",
   "start": "next start",
   "lint": "eslint",
-  "embed": "tsx scripts/generateEmbeddings.ts"
+  "embed": "tsx --env-file=.env.local src/scripts/generateEmbeddings.ts"
 },
   "dependencies": {
     "@types/recharts": "^1.8.29",

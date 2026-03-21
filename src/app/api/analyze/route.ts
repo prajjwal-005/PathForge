@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
     const fullTrace = [
       {
         step: "Skill Extraction",
-        input: `Resume (${finalResumeText.length} chars) + JD (${finalJdText.length} chars)`,
+        input: `Resume: ${finalResumeText.slice(0, 150)}...`,        
         output: skillGap.resume_skills,
         reasoning: `Identified ${skillGap.resume_skills.length} skills in resume`,
       },

@@ -281,14 +281,16 @@ PathForge/
 │   │   └── index.ts                  # Shared TypeScript interfaces
 │   │
 │   └── styles/
-│       └── tokens.ts                 # Design tokens (colors, fonts, spacing)
-│
-├── data/
-│   ├── coursera_enriched.csv         # Cleaned + enriched course catalog
-│   └── catalog_embeddings.json       # Pre-computed embeddings (committed)
-│
-├── scripts/
-│   └── generateEmbeddings.ts         # One-time embedding generation script
+│   │    └── tokens.ts                 # Design tokens (colors fonts, spacing)
+│   ├──styles/
+│   │    └── tokens.ts                 # Design tokens (colors, fonts, spacing)
+│   │
+│   ├── data/
+│   │    ├── coursera_enriched.csv         # Cleaned + enriched course catalog
+│   │    └── catalog_embeddings.json       # Pre-computed embeddings (committed)
+│   │
+│   ├── scripts/
+│         └── generateEmbeddings.ts         # One-time embedding generation script
 │
 ├── .env.example                      # Environment variable template
 ├── .env.local                        # Local secrets (not committed)
@@ -328,6 +330,85 @@ Open [http://localhost:3000](http://localhost:3000)
 
 > **Note:** `catalog_embeddings.json` is pre-committed to the repository. No embedding generation step is required to run the app.
 
+### 🗂️ Using Your Own Course Catalog
+
+You can replace the default Coursera catalog with your own dataset.
+
+#### CSV Format Required
+
+Your CSV must have these columns (column names must match exactly):
+```csv
+course,skills,level,duration,rating,certificate_type,prerequisites,skill_level_required
+"Introduction to Docker","Docker, Containers, DevOps","Beginner","1 - 3 Months","4.7","Certificate","Basic Linux|Command Line","beginner"
+```
+
+| Column | Required | Description |
+|---|---|---|
+| `course` | ✅ | Full course title |
+| `skills` | ✅ | Comma-separated skills covered |
+| `level` | ✅ | `Beginner`, `Intermediate`, or `Advanced` |
+| `duration` | ✅ | e.g. `1 - 3 Months`, `1 - 4 Weeks` |
+| `rating` | ✅ | Number e.g. `4.7` |
+| `certificate_type` | ✅ | e.g. `Certificate`, `Professional Certificate` |
+| `prerequisites` | ✅ | Pipe-separated e.g. `"Basic Linux\|Command Line"` |
+| `skill_level_required` | ✅ | `beginner`, `intermediate`, or `advanced` |
+
+> **Tip:** Use Gemini or ChatGPT to enrich your CSV with `prerequisites` and `skill_level_required` if your source data doesn't have them. See the prompt template below.
+
+#### Enrichment Prompt (if your CSV lacks prerequisites)
+
+Use this prompt with any LLM to enrich your CSV:
+
+**System:**
+```
+You are a course catalog enrichment assistant. Given courses in CSV format, add two columns:
+1. "prerequisites": 2-4 pipe-separated specific skills (e.g. "Basic Python|Linux CLI")
+2. "skill_level_required": one of beginner, intermediate, advanced
+
+Return ONLY valid CSV with header. No explanation, no markdown.
+```
+
+**User:**
+```
+Enrich this CSV by adding prerequisites and skill_level_required columns:
+
+course,skills,level,duration,rating,certificate_type
+"Your course","skill1, skill2","Beginner","1-3 Months","4.5","Certificate"
+```
+
+Send in batches of 20-30 rows to avoid context limits.
+
+#### Steps to Use Your Own Catalog
+
+**1. Place your CSV file:**
+```
+src/data/coursera_enriched.csv  ← replace this file
+```
+
+**2. Regenerate embeddings:**
+```bash
+npx tsx src/scripts/generateEmbeddings.ts
+```
+
+This will:
+- Load your CSV from `src/data/coursera_enriched.csv`
+- Clean and normalize the skills column automatically
+- Generate embeddings using `nomic-embed-text-v1` (runs locally, no API key needed)
+- Save output to `src/data/catalog_embeddings.json`
+
+> ⚠️ First run downloads the embedding model (~270MB). Subsequent runs are instant.
+
+**3. Restart the dev server:**
+```bash
+npm run dev
+```
+
+#### Notes
+- The script handles messy skills formatting automatically (removes `{}`, extra quotes, leading spaces)
+- Rows that fail to embed are skipped and logged — check terminal output
+- There is a 200ms delay between rows to prevent memory issues with large catalogs
+- For catalogs larger than 1000 rows, consider increasing the delay to 500ms
+
 ### Environment Variables
 
 ```env
@@ -346,7 +427,7 @@ npx tsx src/scripts/generateEmbeddings.ts
 
 ---
 
-##  Features
+## Features
 
 - **Resume parsing** — PDF upload or paste text
 - **JD parsing** — PDF upload or paste text
@@ -360,7 +441,7 @@ npx tsx src/scripts/generateEmbeddings.ts
 
 ---
 
-##  Evaluation Criteria Coverage
+##  Evaluation-criteria-coverage
 
 | Criteria | Weight | How We Address It |
 |---|---|---|

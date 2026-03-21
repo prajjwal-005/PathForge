@@ -50,10 +50,10 @@ export default function Home() {
           <ResultTabs result={result} activeTab={activeTab} onTabChange={setActiveTab} />
 
           
-          <div style={{ display: "flex", gap: 12, marginTop: 32 }}>
+          
           <button style={s.backBtn} onClick={reset}>← New Analysis</button>
           <DownloadReport result={result} />
-</div>
+
 
         </main>
       )}
